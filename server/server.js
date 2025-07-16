@@ -1,5 +1,5 @@
 const express = require('express');
-const cors = require('cors');
+const cors = require('cors'); // This line enables CORS
 require('dotenv').config();
 const connectDB = require('./config/db');
 
@@ -9,7 +9,10 @@ const app = express();
 connectDB();
 
 // Middleware
-app.use(cors());
+// This configures CORS to allow requests ONLY from your Netlify dashboard
+app.use(cors({
+    origin: 'https://magnificent-basbousa-a20436.netlify.app' // This is your specific Netlify URL
+}));
 app.use(express.json());
 
 // Test Route
@@ -26,3 +29,4 @@ const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
 });
+
