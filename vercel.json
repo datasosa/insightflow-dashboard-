@@ -7,12 +7,14 @@
   ],
   "builds": [
     {
-      "src": "package.json",
+      "src": "client/package.json",
       "use": "@vercel/static-build",
       "config": {
         "distDir": "build"
       }
     }
-  ]
+  ],
+  "installCommand": "npm install --prefix client",
+  "buildCommand": "npm run build --prefix client"
 }
 
