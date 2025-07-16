@@ -1,0 +1,16 @@
+# Node.js
+node_modules/
+.env
+
+# macOS
+.DS_Store
+
+# Logs
+*.log
+
+# Production
+build/
+
+# VS Code (if you use it)
+.vscode/
+
