@@ -1,35 +1,35 @@
 const express = require('express');
 const router = express.Router();
-const mongoose = require('mongoose');
+const mongoose = require('mongoose'); // Ensure mongoose is imported
 
-// Make sure your Metric model is defined or imported here.
-// If your Metric model is defined in server.js, you might need to
-// ensure it's accessible or redefine it here for this route file.
-// For simplicity, let's ensure it's defined here.
-
-// Define a simple schema and model if not already defined globally or imported
-// This is the schema your data in MongoDB Atlas should match
+// Define the schema for your metrics.
+// This explicitly tells Mongoose to use the 'metrics' collection.
 const metricSchema = new mongoose.Schema({
     metric_name: String,
     metric_value: Number
-});
+}, { collection: 'metrics' }); 
 
-// Ensure the model is defined only once or fetched if already defined
+// Define the Metric model.
+// Use mongoose.models.Metric to avoid re-defining if it exists (e.g., from server.js).
 const Metric = mongoose.models.Metric || mongoose.model('Metric', metricSchema);
-
 
 // GET all metrics
 router.get('/', async (req, res) => {
+    console.log('API /api/metrics endpoint hit!'); // Log when this API is accessed
     try {
         const metrics = await Metric.find({}); // Fetch all documents from the 'metrics' collection
+        console.log('Metrics fetched from DB:', metrics); // Log what data was found from MongoDB
+        if (metrics.length === 0) {
+            console.log('MongoDB: No documents found in the metrics collection.'); // Log if no data
+        }
         res.json(metrics); // Send the found documents as JSON
     } catch (err) {
-        console.error('Error fetching metrics from database:', err);
+        console.error('Error fetching metrics from database:', err); // Log any database errors
         res.status(500).json({ message: 'Error fetching metrics from database' });
     }
 });
 
-// POST a new metric (optional, but good for testing)
+// POST a new metric (for future use or if you add an "Add Metric" feature)
 router.post('/', async (req, res) => {
     const { metric_name, metric_value } = req.body;
     if (!metric_name || metric_value === undefined) {
@@ -39,6 +39,7 @@ router.post('/', async (req, res) => {
         const newMetric = new Metric({ metric_name, metric_value });
         await newMetric.save();
         res.status(201).json(newMetric);
+        console.log('New metric added to DB:', newMetric);
     } catch (err) {
         console.error('Error adding new metric:', err);
         res.status(500).json({ message: 'Error adding new metric' });
