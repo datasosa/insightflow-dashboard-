@@ -10,7 +10,7 @@ function App() {
   useEffect(() => {
     const fetchMetrics = async () => {
       try {
-        const res = await axios.get('http://localhost:5000/api/metrics');
+        const res = await axios.get('https://insightflow-api.onrender.com/api/metrics');
         console.log('Fetched data:', res.data);
         const formatted = res.data.map(item => ({
           name: item.name,
