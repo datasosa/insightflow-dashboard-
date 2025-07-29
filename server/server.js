@@ -1,5 +1,5 @@
 const express = require('express');
-const cors = require('cors'); // This line enables CORS
+const cors = require('cors');
 require('dotenv').config();
 const connectDB = require('./config/db');
 
@@ -8,14 +8,28 @@ const app = express();
 // Connect to MongoDB
 connectDB();
 
-// Middleware
-// This configures CORS to allow requests ONLY from your Netlify dashboard
+// Allowed origins for CORS
+const allowedOrigins = [
+  'http://localhost:3000', // Local development
+  'https://insightflow-dashboard.onrender.com' // Render static site
+];
+
+// CORS Middleware
 app.use(cors({
-    origin: 'https://magnificent-basbousa-a20436.netlify.app' // This is your specific Netlify URL
+  origin: function (origin, callback) {
+    // Allow requests with no origin (like Postman or curl)
+    if (!origin) return callback(null, true);
+    if (allowedOrigins.includes(origin)) {
+      return callback(null, true);
+    } else {
+      return callback(new Error('CORS not allowed from this origin'), false);
+    }
+  }
 }));
+
 app.use(express.json());
 
-// Test Route
+// Test route
 app.get('/', (req, res) => {
   res.send('InsightFlow backend is live 🚀');
 });
@@ -24,9 +38,8 @@ app.get('/', (req, res) => {
 const metricsRoutes = require('./routes/metrics');
 app.use('/api/metrics', metricsRoutes);
 
-// Port
+// Start server
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
 });
-
