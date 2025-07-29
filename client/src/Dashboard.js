@@ -22,7 +22,7 @@ function Dashboard() {
   useEffect(() => {
     const fetchMetrics = async () => {
       try {
-        const res = await axios.get('http://localhost:5000/api/metrics');
+        const res = await axios.get('https://insightflow-api.onrender.com/api/metrics');
         const formatted = res.data.map((item) => ({
           name: item.name,
           value: item.value,
@@ -73,7 +73,7 @@ function Dashboard() {
     if (!newMetric.name || !newMetric.value) return;
 
     try {
-      const res = await axios.post('http://localhost:5000/api/metrics', {
+      const res = await axios.post('https://insightflow-api.onrender.com/api/metrics', {
         name: newMetric.name,
         value: parseFloat(newMetric.value),
       });
